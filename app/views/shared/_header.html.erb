@@ -1,0 +1,82 @@
+<nav class="navbar navbar-default navbar-static-top" style='margin-bottom: 0px;'>
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <%= link_to 'AirKong', root_path, class: 'navbar-brand' %>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> 
+            Others
+            <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><%= link_to 'Nested Forms', todo_lists_path %></li>
+          </ul>
+        </li>
+      </ul>
+      
+      <%= form_tag search_path, class: "navbar-form navbar-left", method: :get do %>
+        <%= text_field_tag :search, params[:search], placeholder: "Anywhere", class: "form-control" %>
+      <% end %>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <button class="btn btn-danger navbar-btn">
+            <%= link_to "Become a host", new_room_path, id: "become-host", style: "color: white; text-decoration: none" %>
+          </button>          
+        </li>
+
+        <li><%= link_to 'Rooms', rooms_path %></li>
+        <% if !user_signed_in? %>      
+          <li><%= link_to 'Sign In', new_user_session_path %></li>  
+          <li><%= link_to 'Sign Up', new_user_registration_path %></li>  
+        <% else %>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> 
+              <%= image_tag avatar_url(current_user), class: 'img-circle avatar-small' %>
+              <% if current_user.first_name || current_user.last_name %>
+                <%= current_user.fullname %>               
+              <% else %>
+                <%= current_user.email %>               
+              <% end %>
+              <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><%= link_to 'Dashboard', dashboard_path %></li>
+              <li><%= link_to 'Manage Listing', rooms_path %></li>
+              <li><%= link_to 'List Your Space', new_room_path %></li>
+              <li><%= link_to 'Your Reservations', your_reservations_path %></li>
+              <li><%= link_to 'Your Trips', your_trips_path %></li>
+                
+              <li><%= link_to 'My Profile', user_path(current_user) %></li>
+              <li><%= link_to 'My Account', edit_user_registration_path %></li>
+              <li><%= link_to 'Sign Out', destroy_user_session_path, method: :delete, data: { confirm: 'Sure to Sign Out ?' } %></li>
+            </ul>
+          </li>
+        <% end %>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+<%# require 'pry'; binding.pry %>
+
+<% if (user_signed_in?) && !current_page?(root_path) && !current_page?("/rooms/#{params[:id]}") %>
+  <nav class="navbar navbar-default" style="background-color: #565A5C">
+    <div class="container">
+      <ul class="nav navbar-nav">
+        <li class="<%= current_page?(dashboard_path) ? 'active' : '' %>"> <%= link_to "Dashboard", dashboard_path %> </li>
+        <li class="<%= current_page?(rooms_path) ? 'active' : '' %>"> <%= link_to "Manage Listings", rooms_path %> </li>
+        <li class="<%= current_page?(host_calendar_path) ? 'active' : '' %>"> <%= link_to "Host Calendar", host_calendar_path %> </li>
+      </ul>
+    </div>
+  </nav>
+<% end %>
